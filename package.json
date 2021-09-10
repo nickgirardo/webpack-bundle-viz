@@ -1,0 +1,40 @@
+{
+  "name": "webpack-bundle-viz",
+  "version": "0.1.0",
+  "description": "Visualizer for Webpack Bundles",
+  "scripts": {
+    "start": "webpack serve --config conf/webpack.dev.js",
+    "build": "webpack --config conf/webpack.prod.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickgirardo/webpack-bundle-viz.git"
+  },
+  "author": "Nick Girardo <nickgirardo@gmail.com> (https://nickgirardo.com)",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/nickgirardo/webpack-bundle-viz/issues"
+  },
+  "homepage": "https://github.com/nickgirardo/webpack-bundle-viz#readme",
+  "dependencies": {
+    "d3": "^7.0.1",
+    "d3-flame-graph": "^4.0.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
+    "css-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "sass": "^1.39.2",
+    "sass-loader": "^12.1.0",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.2",
+    "webpack": "^5.52.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.2.0"
+  }
+}
