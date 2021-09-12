@@ -1,4 +1,4 @@
-import { readFile, tryJsonParse } from '../util';
+import { readFile, tryJsonParse, parseBundle } from '../util';
 
 interface Props {
   onData: (arg0: any) => void,
@@ -13,6 +13,7 @@ export const FileInput = (props: Props) => {
     
     readFile(file)
       .then(tryJsonParse)
+      .then(parseBundle)
       .then(props.onData)
       .catch(props.onError);
   }
