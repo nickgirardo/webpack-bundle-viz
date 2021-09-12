@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 // defaultFlamegraphTooltip, I've sent him an issue on github
 //@ts-ignore
 import { flamegraph, defaultFlamegraphTooltip, StackFrame } from 'd3-flame-graph';
+import 'd3-flame-graph/dist/d3-flamegraph.css';
 
 // TODO type data
 interface Props {
