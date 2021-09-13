@@ -7,9 +7,12 @@ import * as d3 from 'd3';
 import { flamegraph, defaultFlamegraphTooltip, StackFrame } from 'd3-flame-graph';
 import 'd3-flame-graph/dist/d3-flamegraph.css';
 
+import { fmtPercent } from '../util';
+
 // TODO type data
 interface Props {
   data: any,
+  chunkName: string,
   // TODO type here
   onClick?: (arg0: any) => void,
 }
@@ -21,14 +24,21 @@ export const Flamegraph = (props: Props) => {
     // If our ref is ready, attach our d3 rendering to it
     if (chartRef.current) {
       d3.select(chartRef.current)
-        .datum(props.data)
+        .datum(props.data.get(props.chunkName))
         .call(chart);
     }
   }, [chartRef]);
 
-  // TODO this doesn't seem to be styled correctly
+  // TODO using any here for now as the library doesn't give proper types
   const tip = defaultFlamegraphTooltip()
-    .html((d: { data: StackFrame}) => `name: ${d.data.name}, value: ${d.data.value}, children: ${d.data.children.length}`);
+    .html((d: any) => {
+      if (!d.parent)
+        return `${d.data.name}: ${d.value}`;
+
+      const percentParent = fmtPercent(d.value / d.parent.value);
+      const percentChunk = fmtPercent(d.value / props.data.get(props.chunkName).value);
+      return `${d.data.name}: ${d.value}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
+    });
 
   const chart = flamegraph()
     .width(960)

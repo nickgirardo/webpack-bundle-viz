@@ -84,6 +84,17 @@ export function parseBundle(rawBundle: any): Bundle {
   return bundle;
 }
 
+export function bundleToStacks(bundle: Bundle): Map<string, StackFrame> {
+  const ret = new Map<string, StackFrame>();
+  ret.set('All Chunks', modulesToStacks(bundle.allModules, 'All Chunks'));
+
+  for (const chunk of bundle.chunks) {
+    ret.set(chunk.name, modulesToStacks(chunk.modules, chunk.name));
+  }
+
+  return ret;
+}
+
 // TODO might want a more expressive return type
 export function modulesToStacks(modules: Module[], name: string): StackFrame {
   return {
@@ -123,4 +134,21 @@ function _modulesToStacks(modules: Module[], depth: number): StackFrame[] {
     value: modules.reduce((acc: number, mod: Module) => acc + mod.size, 0),
     children: _modulesToStacks(modules, depth + 1),
   }));
+}
+
+
+export function fmtPercent (ratio: number, digits: number = 2): string {
+  if (ratio === 1)
+    return '100%';
+
+  const scaled = ratio * 100;
+  const major = Math.floor(scaled);
+
+  const minor = scaled - major;
+  const minorTrunc = Math.round(minor * (10 ** digits));
+
+  if (minorTrunc !== 0)
+    return `${major}.${minorTrunc}%`;
+
+  return `${major}%`;
 }

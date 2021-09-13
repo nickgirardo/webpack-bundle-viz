@@ -9,7 +9,11 @@ export default () => {
   return (
     <>
       { bundle &&
-        <Flamegraph data={ bundle } onClick={ a => console.log(a) } />
+        <Flamegraph
+          data={ bundle }
+          chunkName='All Chunks'
+          onClick={ a => console.log(a) }
+        />
       }
       <FileInput
         onData={ data => setBundle(data) }
