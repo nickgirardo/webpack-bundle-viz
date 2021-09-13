@@ -7,7 +7,7 @@ import * as d3 from 'd3';
 import { flamegraph, defaultFlamegraphTooltip, StackFrame } from 'd3-flame-graph';
 import 'd3-flame-graph/dist/d3-flamegraph.css';
 
-import { fmtPercent } from '../util/fmt';
+import { fmtSize, fmtPercent } from '../util/fmt';
 
 interface Props {
   data: Map<string, StackFrame>,
@@ -33,16 +33,18 @@ export const Flamegraph = (props: Props) => {
   // TODO using any here for now as the library doesn't give proper types
   const tip = defaultFlamegraphTooltip()
     .html((d: any) => {
+      const size = fmtSize(d.value);
+
       if (!d.parent)
-        return `${d.data.name}: ${d.value}`;
+        return `${d.data.name}: ${size}`;
 
       const percentParent = fmtPercent(d.value / d.parent.value);
 
       if (!chunk)
-        return `${d.data.name}: ${d.value}, ${percentParent} of Parent`;
+        return `${d.data.name}: ${size}, ${percentParent} of Parent`;
 
       const percentChunk = fmtPercent(d.value / chunk.value);
-      return `${d.data.name}: ${d.value}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
+      return `${d.data.name}: ${size}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
     });
 
   const chart = flamegraph()
