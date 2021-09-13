@@ -1,3 +1,5 @@
+import { StackFrame } from 'd3-flame-graph';
+
 export function readFile(file: File) {
   return new Promise<string>((resolve, reject) => {
     const fr = new FileReader();  
@@ -81,4 +83,43 @@ export function parseBundle(rawBundle: any): Bundle {
   return bundle;
 }
 
+// TODO might want a more expressive return type
+export function modulesToStacks(modules: Module[], name: string): StackFrame {
+  return {
+    name,
+    value: modules.reduce((acc, mod) => acc + mod.size, 0),
+    children: _modulesToStacks(modules, 0)
+  };
+}
 
+type GroupedModules = { [key in string]: Module[] };
+
+function groupByPath(modules: Module[], depth: number): GroupedModules {
+  const result: GroupedModules = {};
+  for (const mod of modules) {
+    if (depth >= mod.path.length)
+      continue;
+
+    // This check is a bit more verbose and less performant than I'd like
+    // I took this approach because if there were keys like 'hasOwnProperty'
+    // things would break :(
+    if (Object.keys(result).includes(mod.path[depth])) {
+      result[mod.path[depth]].push(mod);
+    } else {
+      result[mod.path[depth]] = [mod];
+    }
+  }
+  return result;
+}
+
+function _modulesToStacks(modules: Module[], depth: number): StackFrame[] {
+  const groupedChildren = groupByPath(modules, depth);
+  if (Object.keys(groupedChildren).length === 0)
+    return [];
+
+  return Object.entries(groupedChildren).map(([name, modules]) => ({
+    name,
+    value: modules.reduce((acc: number, mod: Module) => acc + mod.size, 0),
+    children: _modulesToStacks(modules, depth + 1),
+  }));
+}

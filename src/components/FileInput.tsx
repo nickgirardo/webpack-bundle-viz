@@ -1,4 +1,4 @@
-import { readFile, tryJsonParse, parseBundle } from '../util';
+import { readFile, tryJsonParse, parseBundle, modulesToStacks } from '../util';
 
 interface Props {
   onData: (arg0: any) => void,
@@ -14,6 +14,7 @@ export const FileInput = (props: Props) => {
     readFile(file)
       .then(tryJsonParse)
       .then(parseBundle)
+      .then(b => modulesToStacks(b.allModules, 'All Chunks'))
       .then(props.onData)
       .catch(props.onError);
   }
