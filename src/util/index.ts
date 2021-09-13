@@ -51,11 +51,12 @@ function getModuleInfo(mod: any): Module {
     // filtering removes any path parts with terminal /
     const path = pathPart.split('/').slice(1).filter(str => str.length);
 
+    // Add any text after the space to the last part of the path
     if (extra.length) {
-      return path.concat(extra.join(' '));
-    } else {
-      return path;
+      path[path.length-1] += ' ' + extra.join(' ');
     }
+
+    return path;
   }
 
   return {
