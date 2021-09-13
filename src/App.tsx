@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
+import { StackFrame } from 'd3-flame-graph';
+
 import { FileInput } from './components/FileInput';
 import { Flamegraph } from './components/Flamegraph';
 
 export default () => {
-  const [bundle, setBundle] = useState<any | null>(null);
+  const [bundle, setBundle] = useState<Map<string, StackFrame> | null>(null);
 
   return (
     <>

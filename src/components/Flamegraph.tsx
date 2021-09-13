@@ -9,9 +9,8 @@ import 'd3-flame-graph/dist/d3-flamegraph.css';
 
 import { fmtPercent } from '../util';
 
-// TODO type data
 interface Props {
-  data: any,
+  data: Map<string, StackFrame>,
   chunkName: string,
   // TODO type here
   onClick?: (arg0: any) => void,
@@ -20,14 +19,16 @@ interface Props {
 export const Flamegraph = (props: Props) => {
   const chartRef = useRef(null);
 
+  const chunk = props.data.get(props.chunkName);
+
   useEffect(() => {
     // If our ref is ready, attach our d3 rendering to it
     if (chartRef.current) {
       d3.select(chartRef.current)
-        .datum(props.data.get(props.chunkName))
+        .datum(chunk)
         .call(chart);
     }
-  }, [chartRef]);
+  }, [chunk, chartRef]);
 
   // TODO using any here for now as the library doesn't give proper types
   const tip = defaultFlamegraphTooltip()
@@ -36,7 +37,11 @@ export const Flamegraph = (props: Props) => {
         return `${d.data.name}: ${d.value}`;
 
       const percentParent = fmtPercent(d.value / d.parent.value);
-      const percentChunk = fmtPercent(d.value / props.data.get(props.chunkName).value);
+
+      if (!chunk)
+        return `${d.data.name}: ${d.value}, ${percentParent} of Parent`;
+
+      const percentChunk = fmtPercent(d.value / chunk.value);
       return `${d.data.name}: ${d.value}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
     });
 
