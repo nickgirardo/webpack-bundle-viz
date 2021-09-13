@@ -43,6 +43,7 @@ export const Flamegraph = (props: Props) => {
       if (!chunk)
         return `${d.data.name}: ${size}, ${percentParent} of Parent`;
 
+      // TODO if there is zoom going on this calculation is wrong
       const percentChunk = fmtPercent(d.value / chunk.value);
       return `${d.data.name}: ${size}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
     });
