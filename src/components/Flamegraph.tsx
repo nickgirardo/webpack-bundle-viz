@@ -7,7 +7,7 @@ import * as d3 from 'd3';
 import { flamegraph, defaultFlamegraphTooltip, StackFrame } from 'd3-flame-graph';
 import 'd3-flame-graph/dist/d3-flamegraph.css';
 
-import { fmtPercent } from '../util';
+import { fmtPercent } from '../util/fmt';
 
 interface Props {
   data: Map<string, StackFrame>,
