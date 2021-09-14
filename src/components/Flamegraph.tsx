@@ -52,6 +52,7 @@ export const Flamegraph = (props: Props) => {
   const chart = flamegraph()
     .width(960)
     .cellHeight(18)
+    .inverted(true)
     // TODO prefers reduced motion should be considered here?
     .transitionDuration(50)
     .minFrameSize(5)
@@ -59,7 +60,6 @@ export const Flamegraph = (props: Props) => {
     // I've sent him a PR to add it to index.d.ts
     //@ts-ignore
     .sort((a, b) => d3.descending(a.value, b.value))
-    .title('')
     .selfValue(false)
     .tooltip(tip);
 
