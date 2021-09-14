@@ -1,8 +1,5 @@
 // digits is the number of digits after the decimal point
 export function fmtPercent (ratio: number, digits: number = 2): string {
-  if (ratio === 1)
-    return '100%';
-
   const sign = ratio < 0 ? '-' : '';
 
   const scaled = Math.abs(ratio) * 100;
