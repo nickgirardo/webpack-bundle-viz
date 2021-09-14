@@ -33,18 +33,17 @@ export const Flamegraph = (props: Props) => {
   // TODO using any here for now as the library doesn't give proper types
   const tip = defaultFlamegraphTooltip()
     .html((d: any) => {
-      const size = fmtSize(d.value);
+      const size = fmtSize(d.data.value);
 
       if (!d.parent)
         return `${d.data.name}: ${size}`;
 
-      const percentParent = fmtPercent(d.value / d.parent.value);
+      const percentParent = fmtPercent(d.data.value / d.parent.data.value);
 
       if (!chunk)
         return `${d.data.name}: ${size}, ${percentParent} of Parent`;
 
-      // TODO if there is zoom going on this calculation is wrong
-      const percentChunk = fmtPercent(d.value / chunk.value);
+      const percentChunk = fmtPercent(d.data.value / chunk.value);
       return `${d.data.name}: ${size}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
     });
 
