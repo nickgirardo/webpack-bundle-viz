@@ -71,3 +71,45 @@ describe('fmtPercent', () => {
     });
   });
 });
+
+describe('fmtSize', () => {
+  test('Uses correct units for different scales', () => {
+    const suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+    expect(fmtSize(1024**0)).toBe('1B');
+    expect(fmtSize(1024**1)).toBe('1KiB');
+    expect(fmtSize(1024**2)).toBe('1MiB');
+    expect(fmtSize(1024**3)).toBe('1GiB');
+    expect(fmtSize(1024**4)).toBe('1TiB');
+    expect(fmtSize(1024**5)).toBe('1PiB');
+    expect(fmtSize(1024**6)).toBe('1EiB');
+    expect(fmtSize(1024**7)).toBe('1ZiB');
+    expect(fmtSize(1024**8)).toBe('1YiB');
+  });
+
+  test('Gives up if the size is too large', () => {
+    expect(fmtSize(1024**9)).toBe('Very large');
+    expect(fmtSize(Infinity)).toBe('Very large');
+  });
+
+  test('Scales starting value correctly', () => {
+    expect(fmtSize(344)).toBe('344B');
+    expect(fmtSize(27* (1024**3))).toBe('27GiB');
+  });
+
+  describe('Handling of decimal results', () => {
+    test('Respects decimal parameter', () => {
+      expect(fmtSize(4/3 * (1024**3), 0)).toBe('1GiB');
+      expect(fmtSize(4/3 * (1024**3), 1)).toBe('1.3GiB');
+      expect(fmtSize(4/3 * (1024**3), 2)).toBe('1.33GiB');
+      expect(fmtSize(4/3 * (1024**3), 3)).toBe('1.333GiB');
+      expect(fmtSize(4/3 * (1024**3), 4)).toBe('1.3333GiB');
+      expect(fmtSize(4/3 * (1024**3), 5)).toBe('1.33333GiB');
+    });
+
+    test('Decimal parameter defaults to 2', () => {
+      const value = 4/3 * (1024**3);
+      expect(fmtSize(value)).toBe(fmtSize(value, 2));
+    });
+  });
+});
