@@ -27,6 +27,8 @@ export const Flamegraph = (props: Props) => {
       d3.select(chartRef.current)
         .datum(chunk)
         .call(chart);
+
+      return () => { chart.destroy(); };
     }
   }, [chunk, chartRef]);
 
