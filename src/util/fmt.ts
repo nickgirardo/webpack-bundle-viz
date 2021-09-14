@@ -27,5 +27,5 @@ export function fmtSize (size: number, digits: number = 2): string {
 
   const roundedSize = Math.floor(scaledSize * (10 ** digits)) / (10 ** digits);
 
-  return `${roundedSize} ${suffixes[magnitude]}`;
+  return `${roundedSize}${suffixes[magnitude]}`;
 }
