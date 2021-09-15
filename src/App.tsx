@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 
 import { StackFrame } from 'd3-flame-graph';
 
-import { fmtSize } from './util/fmt';
-
 import { FileInput } from './components/FileInput';
 import { Flamegraph } from './components/Flamegraph';
+import { ChunkSelect } from './components/ChunkSelect';
 
 export default () => {
-  const [isMultiChunk, setIsMultiChunk] = useState<boolean>(false);
   const [bundle, setBundle] = useState<Map<string, StackFrame> | null>(null);
   const [currentChunk, setCurrentChunk] = useState<string | null>(null);
 
@@ -18,7 +16,6 @@ export default () => {
       // This might sound strange, but if there are 2 chunks'
       // One is "All Chunks" and the other is the same, but by its file name
       const isMultiChunk = bundle.size > 2;
-      setIsMultiChunk(isMultiChunk);
 
       if (isMultiChunk) {
         setCurrentChunk('All Chunks');
@@ -33,6 +30,7 @@ export default () => {
   }, [bundle]);
 
   const showFlameGraph = bundle && currentChunk && bundle.has(currentChunk);
+  const showChunkSelect = bundle && currentChunk && (bundle.size > 2);
 
   return (
     <>
@@ -43,20 +41,12 @@ export default () => {
           onClick={ a => console.log(a) }
         />
       }
-      { isMultiChunk && bundle && currentChunk &&
-        <select
-          onChange={ ev => setCurrentChunk(ev.target.value) }
+      { showChunkSelect &&
+        <ChunkSelect
           value={ currentChunk }
-        >
-          { Array.from(bundle.entries()).map(([name, chunk]) =>
-            <option
-              value={ name }
-              key={ name }
-            >
-              { name } ({ fmtSize(chunk.value) })
-            </option>
-          )}
-        </select>
+          onChange={ setCurrentChunk }
+          bundle={ bundle }
+        />
       }
       <FileInput
         onData={ data => setBundle(data) }
