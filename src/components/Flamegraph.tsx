@@ -46,7 +46,10 @@ export const Flamegraph = (props: Props) => {
         return `${d.data.name}: ${size}, ${percentParent} of Parent`;
 
       const percentChunk = fmtPercent(d.data.value / chunk.value);
-      return `${d.data.name}: ${size}, ${percentParent} of Parent, ${percentChunk} of ${props.chunkName}`;
+      // Showing the whole chunk name can be way too much
+      const chunkName = props.chunkName === 'All Chunks' ? 'All Chunks' : 'Chunk';
+
+      return `${d.data.name}: ${size}, ${percentParent} of Parent, ${percentChunk} of ${chunkName}`;
     });
 
   const chart = flamegraph()
